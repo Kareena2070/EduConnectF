@@ -13,7 +13,9 @@ export default function Login({ onLoginSuccess }) {
     setError("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/login`, {
+      // Ensure the base API URL doesn't end with a trailing slash to avoid double-slash redirects
+      const base = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+      const res = await fetch(`${base}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
