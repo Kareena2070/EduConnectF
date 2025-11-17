@@ -13,9 +13,19 @@ export default function Login({ onLoginSuccess }) {
     setError("");
 
     try {
-      // Ensure the base API URL doesn't end with a trailing slash to avoid double-slash redirects
-      const base = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
-      const res = await fetch(`${base}/api/users/login`, {
+      // Build the request URL with the URL() constructor so it's safe even if the
+      // VITE_API_URL has or lacks a trailing slash (prevents double-slash redirects)
+      const rawBase = import.meta.env.VITE_API_URL || "";
+      let url;
+      if (rawBase) {
+        // ensure rawBase is an absolute URL
+        url = new URL("/api/users/login", rawBase).toString();
+      } else {
+        // relative to current origin
+        url = "/api/users/login";
+      }
+
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
