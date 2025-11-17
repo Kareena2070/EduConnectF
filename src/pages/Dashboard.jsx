@@ -46,7 +46,10 @@ export default function Dashboard() {
 
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+        const rawBase = import.meta.env.VITE_API_URL || "";
+        const url = rawBase ? new URL("/api/users/me", rawBase).toString() : "/api/users/me";
+
+        const res = await fetch(url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

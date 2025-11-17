@@ -16,7 +16,10 @@ export default function Register() {
 
     try {
       // NOTE: Ensure VITE_API_URL is correctly defined in your .env file (e.g., http://localhost:5000)
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/register`, {
+      const rawBase = import.meta.env.VITE_API_URL || "";
+      const url = rawBase ? new URL("/api/users/register", rawBase).toString() : "/api/users/register";
+
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
